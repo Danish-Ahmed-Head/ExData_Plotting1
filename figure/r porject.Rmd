@@ -1,0 +1,45 @@
+---
+title: "Untitled"
+output: html_document
+date: "2025-04-08"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+# Load necessary libraries
+library(ggplot2)
+```{r}
+# Read the dataset
+data <- read.table("household_power_consumption.txt", header = TRUE, sep = ";", na.strings = "?", stringsAsFactors = FALSE)
+```{r}
+# Convert Date and Time to Date/Time format
+data$Datetime <- strptime(paste(data$Date, data$Time), "%d/%m/%Y %H:%M:%S")
+data$Date <- as.Date(data$Datetime)
+```{r}
+# Filter for the required dates (2007-02-01 and 2007-02-02)
+data <- data[data$Date %in% c("2007-02-01", "2007-02-02"), ]
+```{r}
+# Plot 1: Global Active Power vs. Date/Time
+png("plot1.png", width = 480, height = 480)
+plot(data$Datetime, data$Global_active_power, type = "l", xlab = "Date/Time", ylab = "Global Active Power (kilowatts)", main = "Global Active Power vs. Date/Time")
+dev.off()
+```{r}
+# Plot 2: Voltage vs. Date/Time
+png("plot2.png", width = 480, height = 480)
+plot(data$Datetime, data$Voltage, type = "l", xlab = "Date/Time", ylab = "Voltage (volt)", main = "Voltage vs. Date/Time")
+dev.off()
+```{r}
+# Plot 3: Sub-metering 1, 2, and 3 vs. Date/Time
+png("plot3.png", width = 480, height = 480)
+plot(data$Datetime, data$Sub_metering_1, type = "l", col = "black", xlab = "Date/Time", ylab = "Energy Sub-metering", main = "Sub-metering 1, 2, and 3 vs. Date/Time")
+lines(data$Datetime, data$Sub_metering_2, col = "red")
+lines(data$Datetime, data$Sub_metering_3, col = "blue")
+legend("topright", legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), col = c("black", "red", "blue"), lty = 1)
+dev.off()
+```{r}
+# Plot 4: Global Reactive Power vs. Date/Time
+png("plot4.png", width = 480, height = 480)
+plot(data$Datetime, data$Global_reactive_power, type = "l", xlab = "Date/Time", ylab = "Global Reactive Power (kilovolt-ampere reactive)", main = "Global Reactive Power vs. Date/Time")
+dev.off()
